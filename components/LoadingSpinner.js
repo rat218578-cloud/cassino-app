@@ -11,4 +11,3 @@ export default function LoadingSpinner({ message = "Carregando..." }) {
     </div>
   );
 }
-}
