@@ -6,14 +6,12 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redireciona diretamente para o jogo
-    // O iframe vai mostrar a tela de login da Sortenabet
     const timer = setTimeout(() => {
       router.push('/cassino/football-studio');
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
