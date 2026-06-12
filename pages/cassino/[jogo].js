@@ -19,7 +19,6 @@ export default function CassinoPage() {
 
   return (
     <>
-      {/* Barra superior igual ao diogocartas */}
       <div className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-sm z-50 px-4 py-3 flex justify-between items-center shadow-lg">
         <div className="flex items-center space-x-3">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -33,7 +32,6 @@ export default function CassinoPage() {
         </div>
       </div>
       
-      {/* Iframe com login integrado */}
       <CassinoIframe game={jogo || 'football-studio'} />
     </>
   );
