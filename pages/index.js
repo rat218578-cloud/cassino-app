@@ -1,30 +1,68 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Layout from '../components/Layout';
+import GameCard from '../components/GameCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push('/cassino/football-studio');
-    }, 1000);
+  const games = [
+    { id: 'football-studio', name: 'Football Studio', provider: 'Evolution Gaming', popular: true },
+    { id: 'lightning-roulette', name: 'Lightning Roulette', provider: 'Evolution Gaming', popular: true },
+    { id: 'crazy-time', name: 'Crazy Time', provider: 'Evolution Gaming', popular: true },
+    { id: 'monopoly', name: 'Monopoly Live', provider: 'Evolution Gaming', popular: false },
+    { id: 'blackjack', name: 'Blackjack', provider: 'Evolution Gaming', popular: false },
+    { id: 'baccarat', name: 'Baccarat', provider: 'Evolution Gaming', popular: false },
+  ];
 
-    return () => clearTimeout(timer);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+    } else {
+      setIsAuthenticated(true);
+    }
+    setLoading(false);
   }, [router]);
 
+  if (loading) {
+    return <LoadingSpinner message="Verificando autenticação..." />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-      <div className="text-center">
-        <div className="mb-6">
-          <svg className="w-20 h-20 text-yellow-500 mx-auto animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 12c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8z" />
-          </svg>
-        </div>
-        <h1 className="text-4xl font-bold text-white mb-2">Sorte na Bet</h1>
-        <p className="text-gray-400 mb-8">Cassino Ao Vivo</p>
-        <LoadingSpinner message="Redirecionando..." />
+    <Layout>
+      {/* Banner principal */}
+      <div className="bg-gradient-to-r from-purple-800 to-pink-800 rounded-2xl p-8 mb-8 text-white">
+        <h1 className="text-3xl font-bold mb-2">Bem-vindo ao Cassino Ao Vivo!</h1>
+        <p className="text-purple-200">Escolha seu jogo favorito e comece a jogar agora mesmo.</p>
       </div>
-    </div>
+
+      {/* Jogos Populares */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-white mb-4">🔥 Jogos Populares</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {games.filter(g => g.popular).map(game => (
+            <GameCard key={game.id} game={game} />
+          ))}
+        </div>
+      </div>
+
+      {/* Todos os Jogos */}
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-4">🎮 Todos os Jogos</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {games.map(game => (
+            <GameCard key={game.id} game={game} />
+          ))}
+        </div>
+      </div>
+    </Layout>
   );
 }
