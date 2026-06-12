@@ -6,10 +6,11 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redireciona diretamente para o jogo (como no diogocartas.app)
+    // Redireciona diretamente para o jogo
+    // O iframe vai mostrar a tela de login da Sortenabet
     const timer = setTimeout(() => {
       router.push('/cassino/football-studio');
-    }, 1500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -22,9 +23,9 @@ export default function Home() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 12c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8z" />
           </svg>
         </div>
-        <h1 className="text-4xl font-bold text-white mb-2">Meu Cassino</h1>
+        <h1 className="text-4xl font-bold text-white mb-2">Sorte na Bet</h1>
         <p className="text-gray-400 mb-8">Cassino Ao Vivo</p>
-        <LoadingSpinner />
+        <LoadingSpinner message="Redirecionando..." />
       </div>
     </div>
   );
