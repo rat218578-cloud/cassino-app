@@ -1,56 +1,50 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import CassinoIframe from '../../components/CassinoIframe';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 export default function CassinoPage() {
   const router = useRouter();
   const { jogo } = router.query;
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const r2BaseUrl = process.env.NEXT_PUBLIC_R2_BASE_URL;
+  const iframeSrc = `${r2BaseUrl}?game=${jogo || 'football-studio'}&operator=sortenabet&lang=pt`;
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-    } else {
-      setIsAuthenticated(true);
-    }
-    setLoading(false);
-  }, [router]);
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  if (loading) {
-    return <LoadingSpinner message="Verificando autenticação..." />;
-  }
-
-  if (!isAuthenticated) {
-    return null;
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center text-white">
+          <p className="text-red-500 text-xl mb-4">Erro ao carregar o cassino</p>
+          <button onClick={() => window.location.reload()} className="bg-yellow-500 text-black px-4 py-2 rounded">
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-gray-800 to-gray-900 shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-xl">🎰</span>
-              </div>
-              <span className="text-white font-bold">Cassino Ao Vivo</span>
-            </Link>
-            <Link href="/" className="text-gray-400 hover:text-white transition">
-              ← Voltar ao lobby
-            </Link>
+    <div className="min-h-screen bg-black">
+      {loading && (
+        <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="w-16 h-16 border-t-4 border-yellow-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white">Carregando cassino ao vivo...</p>
           </div>
         </div>
-      </header>
-
-      {/* Conteúdo */}
-      <div className="container mx-auto px-4 py-6">
-        <CassinoIframe game={jogo || 'football-studio'} />
-      </div>
+      )}
+      <iframe
+        src={iframeSrc}
+        className="w-full h-screen border-0"
+        title="Cassino Ao Vivo"
+        allow="autoplay; fullscreen; camera; microphone; clipboard-read; clipboard-write; encrypted-media"
+      />
     </div>
   );
 }
